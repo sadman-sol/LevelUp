@@ -28,7 +28,7 @@ Python, FastAPI, SQLAlchemy, Pydantic, SQLite, HTML
 
 ## Installation
 1. Clone the repository
-git clone https://github.com/yourusername/levelup-productivity-api.git  
+git clone https://github.com/sadman-sol/LevelUp.git   
 cd levelup-productivity-api
 
 2. Create a virtual environment
