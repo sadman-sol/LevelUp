@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LevelUp Productivity</title>
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background: linear-gradient(135deg,#6a11cb,#2575fc);
+margin:0;
+padding:0;
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:800px;
+margin-top:40px;
+}
+
+h1{
+text-align:center;
+color:white;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+h2{
+margin-top:0;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:5px 0 10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:6px;
+background:#2575fc;
+color:white;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#1a5cd8;
+}
+
+.task-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#f5f5f5;
+padding:10px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.completed{
+color:green;
+font-weight:bold;
+}
+
+.pending{
+color:red;
+font-weight:bold;
+}
+
+.task-buttons button{
+margin-left:5px;
+background:#6a11cb;
+}
+
+.task-buttons button:hover{
+background:#4d0ea3;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🚀 LevelUp Productivity</h1>
+
+<div class="card">
+
+<h2>Create Category</h2>
+
+<input id="cat_name" placeholder="Category Name">
+<input id="cat_color" placeholder="Color (e.g. red, blue)">
+
+<button onclick="createCategory()">Create Category</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Create Task</h2>
+
+<input id="title" placeholder="Task Title">
+<input id="desc" placeholder="Task Description">
+<input id="cat_id" placeholder="Category ID">
+
+<button onclick="createTask()">Add Task</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Tasks</h2>
+
+<button onclick="loadTasks()">Load Tasks</button>
+
+<div id="tasks"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const API = "http://127.0.0.1:8000"
+
+
+async function createCategory(){
+
+await fetch(`${API}/categories/`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name:document.getElementById("cat_name").value,
+color:document.getElementById("cat_color").value
+})
+})
+
+alert("Category Created")
+
+}
+
+
+
+async function createTask(){
+
+await fetch(`${API}/tasks/`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+title:document.getElementById("title").value,
+description:document.getElementById("desc").value,
+category_id:Number(document.getElementById("cat_id").value)
+})
+})
+
+alert("Task Created")
+
+}
+
+
+
+async function loadTasks(){
+
+const res = await fetch(`${API}/tasks/`)
+const data = await res.json()
+
+const list = document.getElementById("tasks")
+
+list.innerHTML=""
+
+data.forEach(task=>{
+
+const div=document.createElement("div")
+div.className="task-item"
+
+const status = task.completed
+? `<span class="completed">Completed</span>`
+: `<span class="pending">Pending</span>`
+
+div.innerHTML=`
+
+<div>
+
+<strong>${task.title}</strong><br>
+${task.description}<br>
+Status: ${status}
+
+</div>
+
+<div class="task-buttons">
+
+<button onclick="toggle(${task.id})">Toggle</button>
+
+</div>
+
+`
+
+list.appendChild(div)
+
+})
+
+}
+
+
+
+async function toggle(id){
+
+await fetch(`${API}/tasks/${id}/toggle`,{
+method:"PUT"
+})
+
+loadTasks()
+
+}
+
+</script>
+
+</body>
+</html>
