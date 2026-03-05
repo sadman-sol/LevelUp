@@ -9,6 +9,7 @@ LevelUp is a FastAPI-based personal productivity API that helps users manage dai
 - Completion Toggle: Quickly mark a task as completed.
 
 ## Project Structure
+```
 PRODUCTIVITY_API/
 ├── app/
 │   ├── crud.py
@@ -21,7 +22,7 @@ PRODUCTIVITY_API/
 ├── env/
 ├── requirements.txt
 └── run_steps.txt
-
+```
 ## Tech Stack
 Python, FastAPI, SQLAlchemy, Pydantic, SQLite, HTML
 
